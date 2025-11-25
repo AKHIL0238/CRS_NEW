@@ -1,6 +1,8 @@
-Flask==2.3.2
-streamlit==1.26.0
+streamlit==1.28.1
 numpy==1.24.3
-scikit-learn==1.3.1
-pandas==1.5.3
+pandas==2.0.3
+scikit-learn==1.3.0
 requests==2.31.0
+firebase-admin==6.2.0
+pyrebase4==0.0.11
+python-dotenv==1.0.0
