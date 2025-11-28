@@ -12,7 +12,7 @@ try:
     import firebase_admin
     from firebase_admin import credentials, firestore
     
-    service_account_json = st.secrets.get("FIREBASE_SERVICE_ACCOUNT_KEY")
+    service_account_json = st.secrets["FIREBASE_SERVICE_ACCOUNT_KEY"]
     
     if service_account_json:
         try:
