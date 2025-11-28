@@ -1,13 +1,12 @@
 import streamlit as st
 import os
-
 DEMO_MODE = True
 
 try:
     import pyrebase
-    firebase_api_key = os.getenv("FIREBASE_APIKEY") or os.getenv("FIREBASE_API_KEY")
-    firebase_auth_domain = os.getenv("firebase_authdomain") or os.getenv("FIREBASE_AUTH_DOMAIN")
-    firebase_project_id = os.getenv("firebase_projectid") or os.getenv("FIREBASE_PROJECT_ID")
+    firebase_api_key = st.secrets.get("FIREBASE_APIKEY") or os.getenv("FIREBASE_API_KEY")
+    firebase_auth_domain = st.secrets.get("firebase_authdomain") or st.secrets.get("FIREBASE_AUTH_DOMAIN")
+    firebase_project_id = st.secrets.get("firebase_projectid") or st.secrets.get("FIREBASE_PROJECT_ID")
     
     if firebase_api_key and firebase_auth_domain and firebase_project_id:
         firebase_config = {
@@ -16,8 +15,8 @@ try:
             "databaseURL": f"https://{firebase_project_id}.firebaseio.com",
             "projectId": firebase_project_id,
             "storageBucket": f"{firebase_project_id}.appspot.com",
-            "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID", ""),
-            "appId": os.getenv("FIREBASE_APP_ID", "")
+            "messagingSenderId": st.secrets.get("FIREBASE_MESSAGING_SENDER_ID", ""),
+            "appId": st.secrets.get("FIREBASE_APP_ID", "")
         }
         firebase = pyrebase.initialize_app(firebase_config)
         auth = firebase.auth()

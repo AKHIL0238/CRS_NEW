@@ -100,7 +100,7 @@ def predict_crop(features, model, sc, ms):
 
 def ai_recommendations(crop, features, chat_input=None, chat_history=None, lang="en"):
     api_url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
-    api_token = os.getenv("HUGGINGFACE_API_TOKEN")
+    api_token = st.secrets("HUGGINGFACE_API_TOKEN")
     
     if not api_token:
         return "AI chatbot not configured. Please add HUGGINGFACE_API_TOKEN."

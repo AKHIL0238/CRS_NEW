@@ -1,9 +1,8 @@
 import requests
-import os
+import streamlit as st
 
 def get_weather_forecast(city):
-    api_key = os.getenv("openweather_Apikey") or os.getenv("OPENWEATHER_API_KEY")
-    
+    api_key = st.secrets.get("openweather_Apikey") or st.secrets.get("OPENWEATHER_API_KEY")
     if not api_key:
         return None, "Weather API key not configured"
     
@@ -39,7 +38,7 @@ def get_weather_forecast(city):
         return None, f"Error fetching weather: {str(e)}"
 
 def get_forecast_5day(city):
-    api_key = os.getenv("openweather_Apikey") or os.getenv("OPENWEATHER_API_KEY")
+    api_key = st.secrets.get("openweather_Apikey") or st.secrets.get("OPENWEATHER_API_KEY")
     
     if not api_key:
         return None, "Weather API key not configured"
