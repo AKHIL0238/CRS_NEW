@@ -6,9 +6,12 @@ import streamlit as st
 
 def get_secret(key):
     try:
-        return st.secrets[key]
+        val = st.secrets.get(key)
+        if val:
+            return val
     except:
-        return None
+        pass
+    return os.getenv(key)
 
 db = None
 FIRESTORE_ERROR = None
