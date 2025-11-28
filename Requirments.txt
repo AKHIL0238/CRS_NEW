@@ -4,6 +4,6 @@ pandas==2.0.3
 scikit-learn==1.3.0
 requests==2.31.0
 firebase-admin==6.2.0
-pyrebase4==0.0.11
+pyrebase4
 python-dotenv==1.0.0
 setuptools
