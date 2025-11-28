@@ -1,35 +1,37 @@
-import json
 import os
 from datetime import datetime
-import re
 import streamlit as st
+import json
+import firebase_admin
+from firebase_admin import credentials, firestore
 db = None
 FIRESTORE_ERROR = None
 try:
-    import firebase_admin
-    from firebase_admin import credentials, firestore
-    
-    service_account_json = st.secrets["FIREBASE_SERVICE_ACCOUNT_KEY"]
-    
-    if service_account_json:
-        try:
-            service_account_dict = json.loads(service_account_json)
-            
-            if not firebase_admin._apps:
-                cred = credentials.Certificate(service_account_dict)
-                firebase_admin.initialize_app(cred)
-            
-            db = firestore.client()
-            print("Firestore initialized successfully for forum")
-        except Exception as e:
-            FIRESTORE_ERROR = f"Firestore initialization failed: {e}"
-            print(f"Firestore initialization failed: {e}")
+    # 1. Get the secret
+    if "FIREBASE_SERVICE_ACCOUNT_KEY" in st.secrets:
+        key_content = st.secrets["FIREBASE_SERVICE_ACCOUNT_KEY"]
+        
+        # 2. Parse it (Handles both String input and Dict input)
+        if isinstance(key_content, str):
+            service_account_info = json.loads(key_content)
+        else:
+            # It was parsed as a TOML table, convert to standard dict
+            service_account_info = dict(key_content)
+
+        # 3. CRITICAL: Fix the Private Key Newlines
+        # This is the #1 reason deployments fail while Replit works
+        if "private_key" in service_account_info:
+            service_account_info["private_key"] = service_account_info["private_key"].replace("\\n", "\n")
+
+        # 4. Initialize
+        if not firebase_admin._apps:
+            cred = credentials.Certificate(service_account_info)
+            firebase_admin.initialize_app(cred)
+        
+        db = firestore.client()
+        
     else:
-        FIRESTORE_ERROR = "FIREBASE_SERVICE_ACCOUNT_KEY secret is not configured"
-        print("FIREBASE_SERVICE_ACCOUNT_KEY not found")
-except ImportError as e:
-    FIRESTORE_ERROR = f"firebase-admin package not available: {e}"
-    print(f"firebase-admin not available: {e}")
+        st.error("Secret 'FIREBASE_SERVICE_ACCOUNT_KEY' not found in App Settings.")
 
 def is_firestore_configured():
     return db is not None
