@@ -49,3 +49,4 @@ uv.lock
 .DS_Store
 Thumbs.db
 .streamlit/secrets.toml
+.env
