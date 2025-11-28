@@ -1,23 +1,11 @@
 import streamlit as st
 import os
-DEMO_MODE = True
+import pyrebase
 firebase_api_key = st.secrets.get("FIREBASE_APIKEY") or os.getenv("FIREBASE_API_KEY")
-    firebase_auth_domain = st.secrets.get("firebase_authdomain") or st.secrets.get("FIREBASE_AUTH_DOMAIN")
-    firebase_project_id = st.secrets.get("firebase_projectid") or st.secrets.get("FIREBASE_PROJECT_ID")
-    
-st.write({
-  "have_api_key": bool(firebase_api_key),
-  "have_auth_domain": bool(firebase_auth_domain),
-  "have_project_id": bool(firebase_project_id),
-})
-try:
-    import pyrebase
-    firebase_api_key = st.secrets.get("FIREBASE_APIKEY") or os.getenv("FIREBASE_API_KEY")
-    firebase_auth_domain = st.secrets.get("firebase_authdomain") or st.secrets.get("FIREBASE_AUTH_DOMAIN")
-    firebase_project_id = st.secrets.get("firebase_projectid") or st.secrets.get("FIREBASE_PROJECT_ID")
-    
-    if firebase_api_key and firebase_auth_domain and firebase_project_id:
-        firebase_config = {
+firebase_auth_domain = st.secrets.get("firebase_authdomain") or st.secrets.get("FIREBASE_AUTH_DOMAIN")
+firebase_project_id = st.secrets.get("firebase_projectid") or st.secrets.get("FIREBASE_PROJECT_ID")    
+if firebase_api_key and firebase_auth_domain and firebase_project_id:
+    firebase_config = {
             "apiKey": firebase_api_key,
             "authDomain": firebase_auth_domain,
             "databaseURL": f"https://{firebase_project_id}.firebaseio.com",
@@ -26,32 +14,17 @@ try:
             "messagingSenderId": st.secrets.get("FIREBASE_MESSAGING_SENDER_ID", ""),
             "appId": st.secrets.get("FIREBASE_APP_ID", "")
         }
-        firebase = pyrebase.initialize_app(firebase_config)
-        auth = firebase.auth()
-        DEMO_MODE = False
-    else:
-        auth = None
-        DEMO_MODE = True
-except Exception as e:
-    auth = None
-    DEMO_MODE = True
-    print(f"Firebase initialization error (using demo mode): {e}")
-
+firebase = pyrebase.initialize_app(firebase_config)
+auth = firebase.auth()    
 def init_session_state():
     if 'user' not in st.session_state:
         st.session_state.user = None
     if 'user_email' not in st.session_state:
         st.session_state.user_email = None
-
 def login_user(email, password):
     if not email or not password:
         return False, "Please enter both email and password"
-    
-    if DEMO_MODE or auth is None:
-        st.session_state.user = {"localId": "demo_user"}
-        st.session_state.user_email = email
-        return True, "✅ Logged in (Demo mode - Firebase not configured. To enable real auth, add Firebase credentials)"
-    
+
     try:
         user = auth.sign_in_with_email_and_password(email, password)
         st.session_state.user = user
