@@ -4,14 +4,6 @@ from datetime import datetime
 import re
 import streamlit as st
 
-def get_secret(key):
-    try:
-        val = st.secrets.get(key)
-        if val:
-            return val
-    except:
-        pass
-    return os.getenv(key)
 
 db = None
 FIRESTORE_ERROR = None
@@ -20,7 +12,7 @@ try:
     import firebase_admin
     from firebase_admin import credentials, firestore
     
-    service_account_json = get_secret("FIREBASE_SERVICE_ACCOUNT_KEY")
+    service_account_json = st.secrets["FIREBASE_SERVICE_ACCOUNT_KEY"]
     
     if service_account_json:
         try:
