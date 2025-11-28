@@ -3,7 +3,7 @@ import streamlit as st
 import os
 
 def get_weather_forecast(city):
-    api_key = st.secrets.get("openweather_Apikey") or os.getenv("openweather_Apikey")
+    api_key = st.secrets["openweather_Apikey"] or os.getenv("openweather_Apikey")
     if not api_key:
         return None, "Weather API key not configured"
     
