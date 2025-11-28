@@ -3,11 +3,8 @@ import os
 from datetime import datetime
 import re
 import streamlit as st
-
-
 db = None
 FIRESTORE_ERROR = None
-
 try:
     import firebase_admin
     from firebase_admin import credentials, firestore
