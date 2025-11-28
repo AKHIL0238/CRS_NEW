@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import os
 
-FIREBASE_API_KEY = st.secrets.get("FIREBASE_APIKEY") or os.getenv("FIREBASE_APIKEY")
+FIREBASE_API_KEY = st.secrets("FIREBASE_APIKEY") or os.getenv("FIREBASE_APIKEY")
 
 # 2. Session Management
 def init_session_state():
