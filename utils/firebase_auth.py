@@ -1,17 +1,21 @@
 import streamlit as st
 import os
 DEMO_MODE = True
-
+firebase_api_key = st.secrets.get("FIREBASE_APIKEY") or os.getenv("FIREBASE_API_KEY")
+    firebase_auth_domain = st.secrets.get("firebase_authdomain") or st.secrets.get("FIREBASE_AUTH_DOMAIN")
+    firebase_project_id = st.secrets.get("firebase_projectid") or st.secrets.get("FIREBASE_PROJECT_ID")
+    
+st.write({
+  "have_api_key": bool(firebase_api_key),
+  "have_auth_domain": bool(firebase_auth_domain),
+  "have_project_id": bool(firebase_project_id),
+})
 try:
     import pyrebase
     firebase_api_key = st.secrets.get("FIREBASE_APIKEY") or os.getenv("FIREBASE_API_KEY")
     firebase_auth_domain = st.secrets.get("firebase_authdomain") or st.secrets.get("FIREBASE_AUTH_DOMAIN")
     firebase_project_id = st.secrets.get("firebase_projectid") or st.secrets.get("FIREBASE_PROJECT_ID")
-    st.write({
-  "have_api_key": bool(firebase_api_key),
-  "have_auth_domain": bool(firebase_auth_domain),
-  "have_project_id": bool(firebase_project_id),
-})
+    
     if firebase_api_key and firebase_auth_domain and firebase_project_id:
         firebase_config = {
             "apiKey": firebase_api_key,
